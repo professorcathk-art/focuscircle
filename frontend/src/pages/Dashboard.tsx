@@ -6,7 +6,7 @@ import {
   DocumentTextIcon,
   EyeIcon,
   ClockIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import apiService from '../services/api';
@@ -185,7 +185,7 @@ export const Dashboard: React.FC = () => {
           {trendingTopicsData.length > 0 && (
             <div className="card">
               <div className="flex items-center mb-4">
-                <TrendingUpIcon className="h-5 w-5 text-primary-600 mr-2" />
+                <ArrowTrendingUpIcon className="h-5 w-5 text-primary-600 mr-2" />
                 <h2 className="text-lg font-medium text-gray-900">Trending Topics</h2>
               </div>
               <div className="space-y-2">

@@ -23,7 +23,8 @@
   "author": "FocusCircle Team",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "vercel": "^47.0.5"
   },
   "engines": {
     "node": ">=18.0.0",

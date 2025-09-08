@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserIcon, BellIcon, KeyIcon, DownloadIcon } from '@heroicons/react/24/outline';
+import { UserIcon, BellIcon, KeyIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import apiService from '../services/api';
 import { useAuth } from '../hooks/useAuth';
 import { LoadingSpinner } from '../components/LoadingSpinner';
@@ -378,7 +378,7 @@ export const Profile: React.FC = () => {
               disabled={exportDataMutation.isPending}
               className="btn-secondary inline-flex items-center"
             >
-              <DownloadIcon className="h-4 w-4 mr-2" />
+              <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
               {exportDataMutation.isPending ? 'Exporting...' : 'Export Data'}
             </button>
           </div>

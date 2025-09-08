@@ -57,7 +57,7 @@ export interface WebsiteStatistics {
 export interface Summary {
   _id: string;
   userId: string;
-  websiteId: string;
+  websiteId: string | Website;
   originalUrl: string;
   title: string;
   content: {
@@ -92,7 +92,6 @@ export interface Summary {
   isArchived: boolean;
   publishedAt: string;
   extractedAt: string;
-  websiteId?: Website;
 }
 
 export interface AuthResponse {
@@ -122,7 +121,7 @@ export interface PaginationInfo {
 export interface PaginatedResponse<T> {
   success: boolean;
   data: {
-    [key: string]: T[];
+    [key: string]: T[] | PaginationInfo;
     pagination: PaginationInfo;
   };
 }

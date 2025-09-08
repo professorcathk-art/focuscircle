@@ -165,11 +165,15 @@ class ApiService {
     category?: string;
     isActive?: boolean;
   }): Promise<PaginatedResponse<Website>> {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
-      ...filters
-    });
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    
+    if (filters) {
+      if (filters.category) params.append('category', filters.category);
+      if (filters.isActive !== undefined) params.append('isActive', filters.isActive.toString());
+    }
+    
     const response = await this.api.get(`/websites?${params}`);
     return response.data;
   }
@@ -239,11 +243,18 @@ class ApiService {
     startDate?: string;
     endDate?: string;
   }): Promise<PaginatedResponse<Summary>> {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
-      ...filters
-    });
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    
+    if (filters) {
+      if (filters.tier) params.append('tier', filters.tier);
+      if (filters.category) params.append('category', filters.category);
+      if (filters.isRead !== undefined) params.append('isRead', filters.isRead.toString());
+      if (filters.startDate) params.append('startDate', filters.startDate);
+      if (filters.endDate) params.append('endDate', filters.endDate);
+    }
+    
     const response = await this.api.get(`/summaries?${params}`);
     return response.data;
   }

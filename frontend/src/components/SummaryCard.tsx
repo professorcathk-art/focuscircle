@@ -56,7 +56,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ summary }) => {
               </div>
               {summary.websiteId && (
                 <span className="truncate max-w-32">
-                  {summary.websiteId.title}
+                  Website
                 </span>
               )}
             </div>

@@ -10,7 +10,7 @@ export const Summaries: React.FC = () => {
   const [filters, setFilters] = useState({
     tier: '',
     category: '',
-    isRead: '',
+    isRead: undefined as boolean | undefined,
   });
 
   const { data: summaries, isLoading } = useQuery({
@@ -18,7 +18,7 @@ export const Summaries: React.FC = () => {
     queryFn: () => apiService.getSummaries(page, 20, filters),
   });
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = (key: string, value: string | boolean | undefined) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPage(1); // Reset to first page when filters change
   };
@@ -27,7 +27,7 @@ export const Summaries: React.FC = () => {
     return <LoadingSpinner className="min-h-64" />;
   }
 
-  const summariesData = summaries?.data.summaries || [];
+  const summariesData = Array.isArray(summaries?.data.summaries) ? summaries!.data.summaries : [];
   const pagination = summaries?.data.pagination;
 
   return (
@@ -77,8 +77,11 @@ export const Summaries: React.FC = () => {
             </select>
 
             <select
-              value={filters.isRead}
-              onChange={(e) => handleFilterChange('isRead', e.target.value)}
+              value={filters.isRead === undefined ? '' : String(filters.isRead)}
+              onChange={(e) => {
+                const value = e.target.value === '' ? undefined : e.target.value === 'true';
+                handleFilterChange('isRead', value);
+              }}
               className="input-field w-auto"
             >
               <option value="">All Status</option>

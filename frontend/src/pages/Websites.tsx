@@ -44,7 +44,7 @@ export const Websites: React.FC = () => {
     return <LoadingSpinner className="min-h-64" />;
   }
 
-  const websitesData = websites?.data.websites || [];
+  const websitesData = Array.isArray(websites?.data.websites) ? websites!.data.websites : [];
   const pagination = websites?.data.pagination;
 
   return (

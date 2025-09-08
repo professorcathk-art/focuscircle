@@ -34,7 +34,7 @@ export const Dashboard: React.FC = () => {
   }
 
   const userStats = stats?.data;
-  const recentSummaries = summaries?.data.summaries || [];
+  const recentSummaries = Array.isArray(summaries?.data.summaries) ? summaries!.data.summaries : [];
   const trendingTopicsData = trendingTopics?.data.trendingTopics || [];
 
   return (

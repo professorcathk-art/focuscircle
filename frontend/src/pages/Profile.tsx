@@ -162,7 +162,9 @@ export const Profile: React.FC = () => {
             className="input-field mt-1"
           />
           {errors.currentPassword && (
-            <p className="mt-1 text-sm text-red-600">{errors.currentPassword.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {String(errors.currentPassword)}
+            </p>
           )}
         </div>
 
@@ -179,7 +181,9 @@ export const Profile: React.FC = () => {
             className="input-field mt-1"
           />
           {errors.newPassword && (
-            <p className="mt-1 text-sm text-red-600">{errors.newPassword.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {String(errors.newPassword)}
+            </p>
           )}
         </div>
 

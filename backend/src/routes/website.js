@@ -16,7 +16,6 @@ router.delete('/:id', websiteController.deleteWebsite);
 
 // Bulk operations
 router.post('/bulk-import', websiteController.bulkImportWebsites);
-router.post('/bulk-update', websiteController.bulkUpdateWebsites);
 
 // Website monitoring
 router.post('/:id/test', websiteController.testWebsite);

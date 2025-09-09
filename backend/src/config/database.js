@@ -10,9 +10,9 @@ const connectDB = async () => {
     console.log('🔗 MongoDB URI:', process.env.MONGODB_URI.replace(/\/\/.*@/, '//***:***@')); // Hide credentials in logs
 
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 10000, // Timeout after 10s
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s
+      connectTimeoutMS: 5000, // Connection timeout
+      socketTimeoutMS: 5000, // Socket timeout
       bufferCommands: true // Enable buffering for serverless
     });
 

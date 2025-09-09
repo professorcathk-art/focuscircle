@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const { generateToken, generateRefreshToken, verifyRefreshToken } = require('../middleware/auth');
 const emailService = require('../services/emailService');
@@ -7,6 +8,15 @@ const emailService = require('../services/emailService');
 const register = async (req, res) => {
   try {
     const { email, password, firstName, lastName } = req.body;
+
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      console.log('⚠️ MongoDB not connected, readyState:', mongoose.connection.readyState);
+      return res.status(503).json({
+        success: false,
+        message: 'Database temporarily unavailable. Please try again later.'
+      });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });

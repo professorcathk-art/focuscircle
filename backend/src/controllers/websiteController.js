@@ -81,9 +81,18 @@ const createWebsite = async (req, res) => {
 
     const website = await Website.create(websiteData);
 
+    // Automatically check the website for updates after creation
+    try {
+      console.log(`🔍 Auto-checking new website: ${website.url}`);
+      await checkWebsiteForUpdates(website._id, userId);
+    } catch (checkError) {
+      console.error('Auto-check failed for new website:', checkError.message);
+      // Don't fail the creation if auto-check fails
+    }
+
     res.status(201).json({
       success: true,
-      message: 'Website added successfully',
+      message: 'Website added successfully and checked for updates',
       data: { website }
     });
   } catch (error) {
@@ -472,6 +481,78 @@ const getWebsiteStats = async (req, res) => {
       message: 'Failed to get website statistics',
       error: error.message
     });
+  }
+};
+
+// Helper function to check website for updates (used by createWebsite)
+const checkWebsiteForUpdates = async (websiteId, userId) => {
+  try {
+    const website = await Website.findOne({ _id: websiteId, userId });
+    if (!website) {
+      throw new Error('Website not found');
+    }
+
+    console.log(`🔍 Checking website for updates: ${website.url}`);
+
+    // Perform content extraction and summarization
+    const result = await contentExtractionService.extractContent(website.url);
+    
+    if (result.success) {
+      // Check if content has changed
+      const contentHash = require('crypto')
+        .createHash('md5')
+        .update(result.content)
+        .digest('hex');
+
+      if (contentHash !== website.lastContentHash) {
+        console.log(`📄 New content found for: ${website.url}`);
+        
+        // Generate summary
+        const summary = await aiService.generateSummary(
+          result.title,
+          result.content,
+          website.category
+        );
+
+        // Create summary record
+        const summaryRecord = await Summary.create({
+          userId,
+          websiteId: website._id,
+          originalUrl: website.url,
+          title: result.title,
+          content: {
+            original: result.content,
+            summary: summary.summary,
+            keyPoints: summary.keyPoints,
+            wordCount: {
+              original: result.content.split(' ').length,
+              summary: summary.summary.split(' ').length
+            }
+          },
+          classification: summary.classification,
+          aiMetadata: summary.metadata,
+          publishedAt: new Date()
+        });
+
+        // Update website
+        website.lastContentHash = contentHash;
+        await website.updateStatistics(true);
+
+        console.log(`✅ Summary created for: ${website.url}`);
+        return { hasNewContent: true, summary: summaryRecord };
+      } else {
+        console.log(`📄 No new content for: ${website.url}`);
+        await website.updateStatistics(true);
+        return { hasNewContent: false };
+      }
+    } else {
+      console.log(`❌ Failed to extract content from: ${website.url}`);
+      await website.updateStatistics(false, result.error);
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error('Check website for updates error:', error);
+    throw error;
   }
 };
 

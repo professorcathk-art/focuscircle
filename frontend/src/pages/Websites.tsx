@@ -136,11 +136,14 @@ export const Websites: React.FC = () => {
                     {website.statistics.totalChecks} checks
                   </span>
                   <span className={`${
-                    website.statistics.successfulChecks / website.statistics.totalChecks > 0.8
+                    website.statistics.totalChecks > 0 && (website.statistics.successfulChecks / website.statistics.totalChecks) > 0.8
                       ? 'text-green-600'
-                      : 'text-red-600'
+                      : 'text-gray-500'
                   }`}>
-                    {Math.round((website.statistics.successfulChecks / website.statistics.totalChecks) * 100)}% success
+                    {website.statistics.totalChecks > 0 
+                      ? `${Math.round((website.statistics.successfulChecks / website.statistics.totalChecks) * 100)}% success`
+                      : 'Not checked yet'
+                    }
                   </span>
                 </div>
                 

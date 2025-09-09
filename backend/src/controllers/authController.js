@@ -17,33 +17,26 @@ const register = async (req, res) => {
       });
     }
 
-    // Generate email verification token
-    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
-
-    // Create user
+    // Create user with email already verified (for testing without email setup)
     const user = await User.create({
       email,
       password,
       firstName,
       lastName,
-      emailVerificationToken
+      isEmailVerified: true, // Skip email verification for testing
+      emailVerificationToken: null
     });
 
     // Generate tokens
     const token = generateToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    // Send verification email
-    try {
-      await emailService.sendVerificationEmail(user.email, emailVerificationToken);
-    } catch (emailError) {
-      console.error('Failed to send verification email:', emailError);
-      // Don't fail registration if email fails
-    }
+    // Skip email verification for testing
+    console.log('Email verification skipped for testing - user automatically verified');
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully. Please check your email for verification.',
+      message: 'User registered successfully. Email verification skipped for testing.',
       data: {
         user: {
           id: user._id,

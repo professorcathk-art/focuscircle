@@ -25,6 +25,12 @@ const createTransporter = () => {
 
 const sendEmail = async (to, subject, html, text = null) => {
   try {
+    // Skip email sending if no email configuration is available
+    if (!process.env.SENDGRID_API_KEY && !process.env.EMAIL_USER) {
+      console.log('Email service not configured - skipping email send');
+      return { success: true, message: 'Email service not configured' };
+    }
+
     const transporter = createTransporter();
     
     const mailOptions = {

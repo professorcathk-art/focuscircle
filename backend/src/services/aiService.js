@@ -1,12 +1,13 @@
 const OpenAI = require('openai');
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.AIML_API_KEY,
+  baseURL: 'https://api.aimlapi.com/v1',
 });
 
 class AIService {
   constructor() {
-    this.model = 'gpt-4';
+    this.model = 'mistralai/Mistral-7B-Instruct-v0.2';
     this.maxTokens = 1000;
   }
 

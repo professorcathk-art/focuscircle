@@ -54,7 +54,8 @@ app.use(compression());
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'https://focuscircle-mnl8.vercel.app',
-  'https://focuscircle.vercel.app'
+  'https://focuscircle.vercel.app',
+  'https://focuscircle-mnl8-jzvuugy6j-professorcathk-2833s-projects.vercel.app'
 ];
 
 app.use(cors({
@@ -62,9 +63,16 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
+    // Check if origin is in allowed list
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
-    } else {
+    } 
+    // Allow Vercel preview URLs (they have this pattern)
+    else if (origin && origin.includes('vercel.app')) {
+      console.log('Allowing Vercel preview URL:', origin);
+      callback(null, true);
+    } 
+    else {
       console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }

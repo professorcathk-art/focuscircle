@@ -20,7 +20,6 @@ router.put('/:id/archive', summaryController.archiveSummary);
 
 // Summary management
 router.get('/:id/related', summaryController.getRelatedSummaries);
-router.post('/:id/share', summaryController.shareSummary);
 
 // Analytics
 router.get('/analytics/overview', summaryController.getAnalyticsOverview);

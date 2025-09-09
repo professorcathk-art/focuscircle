@@ -22,9 +22,29 @@ const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
 
-// Connect to databases
-connectDB();
-connectRedis();
+// Debug environment variables
+console.log('🔍 Environment check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Missing');
+console.log('REDIS_URL:', process.env.REDIS_URL ? 'Set' : 'Missing');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
+console.log('AIML_API_KEY:', process.env.AIML_API_KEY ? 'Set' : 'Missing');
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+
+// Connect to databases with error handling
+try {
+  connectDB();
+  console.log('✅ Database connection initiated');
+} catch (error) {
+  console.error('❌ Database connection failed:', error.message);
+}
+
+try {
+  connectRedis();
+  console.log('✅ Redis connection initiated');
+} catch (error) {
+  console.error('❌ Redis connection failed:', error.message);
+}
 
 // Security middleware
 app.use(helmet());

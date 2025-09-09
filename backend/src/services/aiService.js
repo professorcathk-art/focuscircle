@@ -7,7 +7,7 @@ const openai = new OpenAI({
 
 class AIService {
   constructor() {
-    this.model = 'mistralai/Mistral-7B-Instruct-v0.2';
+    this.model = 'gpt-5';
     this.maxTokens = 1000;
   }
 

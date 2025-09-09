@@ -22,6 +22,9 @@ const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
 
+// Trust proxy for Vercel (fixes rate limiting error)
+app.set('trust proxy', 1);
+
 // Debug environment variables
 console.log('🔍 Environment check:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
@@ -32,19 +35,24 @@ console.log('AIML_API_KEY:', process.env.AIML_API_KEY ? 'Set' : 'Missing');
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
 
 // Connect to databases with error handling
-try {
-  connectDB();
-  console.log('✅ Database connection initiated');
-} catch (error) {
-  console.error('❌ Database connection failed:', error.message);
-}
+const initializeDatabases = async () => {
+  try {
+    await connectDB();
+    console.log('✅ Database connection completed');
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+  }
 
-try {
-  connectRedis();
-  console.log('✅ Redis connection initiated');
-} catch (error) {
-  console.error('❌ Redis connection failed:', error.message);
-}
+  try {
+    await connectRedis();
+    console.log('✅ Redis connection completed');
+  } catch (error) {
+    console.error('❌ Redis connection failed:', error.message);
+  }
+};
+
+// Initialize databases
+initializeDatabases();
 
 // Security middleware
 app.use(helmet());

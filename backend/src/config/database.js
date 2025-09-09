@@ -12,17 +12,19 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-      bufferCommands: false, // Disable mongoose buffering
+      serverSelectionTimeoutMS: 10000, // Timeout after 10s
+      bufferCommands: true, // Enable buffering for serverless
       bufferMaxEntries: 0 // Disable mongoose buffering
     });
 
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error.message);
     console.error('❌ Full error:', error);
     // Don't exit the process, just log the error
     console.log('⚠️  Server will continue without MongoDB connection');
+    throw error; // Re-throw so the caller knows it failed
   }
 };
 

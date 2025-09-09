@@ -13,8 +13,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 10000, // Timeout after 10s
-      bufferCommands: true, // Enable buffering for serverless
-      bufferMaxEntries: 0 // Disable mongoose buffering
+      bufferCommands: true // Enable buffering for serverless
     });
 
     console.log(`📦 MongoDB Connected: ${conn.connection.host}`);

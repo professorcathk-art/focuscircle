@@ -44,6 +44,7 @@ const initializeDatabases = async () => {
   }
 
   try {
+    const { connectRedis } = require('./config/redis');
     await connectRedis();
     console.log('✅ Redis connection completed');
   } catch (error) {

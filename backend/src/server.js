@@ -34,15 +34,31 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
 console.log('AIML_API_KEY:', process.env.AIML_API_KEY ? 'Set' : 'Missing');
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
 
-// Connect to databases with error handling
+// Connect to databases with error handling and retry
 const initializeDatabases = async () => {
-  try {
-    await connectDB();
-    console.log('✅ Database connection completed');
-  } catch (error) {
-    console.error('❌ Database connection failed:', error.message);
+  // Try MongoDB connection with retry
+  let mongoRetries = 0;
+  const maxMongoRetries = 3;
+  
+  while (mongoRetries < maxMongoRetries) {
+    try {
+      await connectDB();
+      console.log('✅ Database connection completed');
+      break; // Success, exit retry loop
+    } catch (error) {
+      mongoRetries++;
+      console.error(`❌ Database connection attempt ${mongoRetries} failed:`, error.message);
+      
+      if (mongoRetries < maxMongoRetries) {
+        console.log(`🔄 Retrying MongoDB connection in 2 seconds... (${mongoRetries}/${maxMongoRetries})`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } else {
+        console.error('❌ All MongoDB connection attempts failed');
+      }
+    }
   }
 
+  // Try Redis connection
   try {
     const { connectRedis } = require('./config/redis');
     await connectRedis();
